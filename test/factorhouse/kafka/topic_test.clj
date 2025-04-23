@@ -1,5 +1,5 @@
 (ns factorhouse.kafka.topic-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [factorhouse.kafka.topic :as topic]
             [factorhouse.test.data :as data]))
 
