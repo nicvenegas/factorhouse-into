@@ -2,30 +2,46 @@
 
 ;; 'topics' holds raw data we collect from a Kafka Cluster
 ;;
-;; It includes information about the size in bytes of a topic spread across brokers (and directories) in a Cluster
+;; It includes information about the size in bytes of a topic spread
+;; across brokers (and directories) in a Cluster
 ;;
-;; e.g. the first line in the data below has the following semantics:
-;;
-;; {1           {"/kfk" {:replica-infos {{:topic "br.ch" :partition 1}  {:size 2838281 :offset-lag 0 :future? false}
-;;  ^ Broker #1  ^ /kfk directory         ^ Topic 'br.ch ^ Partition #1' ^ Size in bytes
-;;
-;; 'topics' in this case represents an evenly (perfectly as it turns out) balanced Kafka Cluster with:
+;; e.g. the first entry in the data below has the following semantics:
+(comment
+  {1 ;; Broker #1
+   {"/kfk" {:replica-infos {{:topic "br.ch" :partition 1} {:size 2838281
+                                                           :offset-lag 0
+                                                           :future? false}}}}}
+  ;;^Directory /kfk          ^Topic 'br.ch' ^Partition #1  ^Size in bytes
+  )
+;; 'topics' in this case represents an evenly (perfectly as it turns
+;; out) balanced Kafka Cluster with:
 ;;
 ;; * 3 Kafka Brokers
 ;; * Each Broker having a single '/kfk' directory
-;; * Each Broker holding data for four topics (basically the same as a DB table in Kafka speak)
-;; * Each Topic being broken into either four (two cases) or twelve (two cases) partitions
-;; * Each Topic+Partition being replicated on each broker (e.g. 'br.ch', partition #1 exists on broker 1, 2, 3)
+;; * Each Broker holding data for four topics (basically the same as a
+;;   DB table in Kafka speak)
+;; * Each Topic being broken into either four (two cases) or
+;;   twelve (two cases) partitions
+;; * Each Topic+Partition being replicated on each
+;;   broker (e.g. 'br.ch', partition #1 exists on broker 1, 2, 3)
 ;;
 ;; Often we want to answer questions like:
+;;
 ;; How much data is on a Broker?
-;; How much data is in a Topic? (either on one broker or combined across the entire cluster)
-;; Is data evenly distributed throughout the partitions of a single topic?
 ;;
-;; To achieve this goal we convert this raw data format into a more useable form ('sizes', below)
+;; How much data is in a Topic? (either on one broker or combined
+;; across the entire cluster)
 ;;
-;; This is the primary technical challenge. Implement the factorhouse.kafka.topic/sizes function, converting this MAP
-;; into the following 'sizes' SEQUENCE and get the first test passing in factorhouse.kafka.topic-test.
+;; Is data evenly distributed throughout the partitions of a single
+;; topic?
+;;
+;; To achieve this goal we convert this raw data format into a more
+;; useable form ('sizes', below)
+;;
+;; This is the primary technical challenge. Implement the
+;; factorhouse.kafka.topic/sizes function, converting this MAP into
+;; the following 'sizes' SEQUENCE and get the first test passing in
+;; factorhouse.kafka.topic-test.
 ;;
 ;; Good luck!
 ;;
@@ -124,13 +140,17 @@
                               {:topic "br.ch" :partition 9}  {:size 2143266 :offset-lag 0 :future? false}}
               :error         "NONE"}}})
 
-;; This is the 'sizes' data, we use it to capture the state of a Kafka Cluster in a useable format.
-;; It is exactly the same data as 'topics' translated into a SEQUENCE rather than a MAP.
+;; This is the 'sizes' data, we use it to capture the state of a Kafka
+;; Cluster in a useable format.  It is exactly the same data as
+;; 'topics' translated into a SEQUENCE rather than a MAP.
 ;;
-;; Maps are fantastic for accessing data by a key, e.g. what is the value for broker #1, topic "br.ch"
+;; Maps are fantastic for accessing data by a key, e.g. what is the
+;; value for broker #1, topic "br.ch"
 ;;
-;; Sequences are fantastic for re-shaping (for example sorting and partitioning), which is a valuable feature because
-;; we use a javascript charting library that expects data in a different shape again (see categories-* below)
+;; Sequences are fantastic for re-shaping (for example sorting and
+;; partitioning), which is a valuable feature because we use a
+;; javascript charting library that expects data in a different shape
+;; again (see categories-* below)
 ;;
 (def sizes
   [{:topic "ad.ch" :partition 0 :size 4240523 :offset-lag 0 :future? false :broker 1 :dir "/kfk"}
@@ -224,10 +244,12 @@
    {:topic "br.me" :partition 10 :size 57538887 :offset-lag 0 :future? false :broker 3 :dir "/kfk"}
    {:topic "br.me" :partition 11 :size 0 :offset-lag 0 :future? false :broker 3 :dir "/kfk"}])
 
-;; This is the extension technical challenge, implement the two remaining functions in the factorhouse.kafka.topic ns
-;; and get the remaining two tests passing.
+;; This is the extension technical challenge, implement the two
+;; remaining functions in the factorhouse.kafka.topic ns and get the
+;; remaining two tests passing.
 ;;
-;; Good luck again. This one is a bit trickier so if you get totally stumped don't by shy, get in touch.
+;; Good luck again. This one is a bit trickier so if you get totally
+;; stumped don't by shy, get in touch.
 
 ;; This is the data that goes produces the first screenshot example in the README
 (def categories-physical
