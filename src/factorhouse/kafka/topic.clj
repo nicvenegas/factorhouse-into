@@ -4,14 +4,14 @@
 
 (defn sizes
   "Transform raw topic information into a more useable sizes shape"
-  [topics])
+  [_topics])
 
 ;; Extension Challenge! Implement these functions.
 
 (defn categories-logical
   "Transform topic sizes into categorised logical view"
-  [sizes])
+  [_sizes])
 
 (defn categories-physical
   "Transform topic sizes into categorised physical view"
-  [sizes])
+  [_sizes])
