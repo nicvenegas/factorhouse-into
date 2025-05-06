@@ -20,7 +20,7 @@
 ;; * Each Broker having a single '/kfk' directory
 ;; * Each Broker holding data for four topics (basically the same as a
 ;;   DB table in Kafka speak)
-;; * Each Topic being broken into either four (two cases) or
+;; * Each Topic being broken into either three (two cases) or
 ;;   twelve (two cases) partitions
 ;; * Each Topic+Partition being replicated on each
 ;;   broker (e.g. 'br.ch', partition #1 exists on broker 1, 2, 3)
