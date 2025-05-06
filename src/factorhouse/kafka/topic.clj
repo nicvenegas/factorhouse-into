@@ -7,16 +7,18 @@
   [topics]
   (->> topics
        (map (fn [[broker dirs]]
-              (map (fn [[dir {:keys [replica-infos]}]]
-                     (map (fn [[{:keys [topic partition]} stats]]
-                            (merge {:broker broker
-                                    :dir dir
-                                    :topic topic
-                                    :partition partition}
-                                   stats))
-                          replica-infos))
+              (map (fn [[dir {:keys [replica-infos error]}]]
+                     (when (= error "NONE")
+                       (map (fn [[{:keys [topic partition]} stats]]
+                              (merge {:broker broker
+                                      :dir dir
+                                      :topic topic
+                                      :partition partition}
+                                     stats))
+                            replica-infos)))
                    dirs)))
        flatten
+       (filter some?)
        (sort-by (juxt :broker :dir :topic :partition))))
 
 ;; Extension Challenge! Implement these functions.
