@@ -359,6 +359,20 @@
    {:id "2.3.10", :name 10, :size 57538887, :parent "2.3"}
    {:id "2.3.11", :name 11, :size 0, :parent "2.3"}])
 
+(comment
+  ;; For categories-physical 0.0.0 is per partition (ignoring replication)
+  {{:broker 1 :topic "ad.ch" :partition '*} (+ 4240523 0 28094612)}
+
+  ;; …and 0.0 is across all partitions (ignoring replication)
+  {{:broker 1, :topic "ad.ch", :partition *} 32335135}
+
+  ;; …and 0 is across all topics & partitiond in the broker (ignoring
+  ;; replication)
+
+  {{:broker 1 :topic "br.ad" :partition '*} (+ 2931032 0 3033367)}
+  {{:broker 1, :topic "br.ad", :partition *} 5964399}
+ )
+
 ;; This is the data that produces the second screenshot example in the demo
 (def categories-logical
   [{:id "0", :name "ad.ch", :size 97005405}
@@ -395,3 +409,17 @@
    {:id "3.9", :name 9, :size 128947365, :parent "3"}
    {:id "3.10", :name 10, :size 172616661, :parent "3"}
    {:id "3.11", :name 11, :size 0, :parent "3"}])
+
+(comment
+  ;; 0.0 is the aggregation of the same parition no. across brokers
+  (transduce (comp
+              (filter #(= (:topic %) "ad.ch"))
+              (filter #(= (:partition %) 0))
+              (map :size))
+             + sizes)
+  #_12721569
+
+  ;; …and 0 is the aggregation of the above for the topic
+
+  ;;
+  )
